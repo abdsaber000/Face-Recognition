@@ -3,3 +3,6 @@
 /attendance-system
 /test_images
 /__pycache__
+/static
+/instance
+/.venv
