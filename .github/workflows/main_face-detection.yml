@@ -26,7 +26,10 @@ jobs:
 
       - name: Install Additional Modules
         run: sudo apt-get update && sudo apt-get install -y python3-venv build-essential cmake
-
+      
+      - name: Upgrade pip
+        run: pip install –upgrade pip && pip install –upgrade setuptools wheel 
+      
       - name: Create and start virtual environment
         run: |
           python -m venv venv
