@@ -22,7 +22,7 @@ jobs:
       - name: Set up Python version
         uses: actions/setup-python@v5
         with:
-          python-version: '3.8.20'
+          python-version: '3.8.x'
 
       - name: Install Additional Modules
         run: sudo apt-get update && sudo apt-get install -y python3-venv build-essential cmake
