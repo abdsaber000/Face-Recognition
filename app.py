@@ -3,6 +3,8 @@ from services import load_and_encode_image, verify_user
 from models import User, db
 import json
 import os
+import uuid
+import hashlib
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///face_recognition.db'
@@ -30,7 +32,10 @@ def register():
     if image.filename == '':
         return jsonify({'message': 'No selected image file'}), 400
 
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+    ext = os.path.splitext(image.filename)[1]
+    hashed_name = hashlib.sha256((image.filename + str(uuid.uuid4())).encode()).hexdigest()
+    filename = f"{hashed_name}{ext}"
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     image.save(image_path)
 
     encoding = load_and_encode_image(image_path)
@@ -53,7 +58,10 @@ def verfiy():
     if image.filename == '':
         return jsonify({'message': 'No selected image file'}), 400
 
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+    ext = os.path.splitext(image.filename)[1]
+    hashed_name = hashlib.sha256((image.filename + str(uuid.uuid4())).encode()).hexdigest()
+    filename = f"{hashed_name}{ext}"
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     image.save(image_path)
 
     encoding = load_and_encode_image(image_path)

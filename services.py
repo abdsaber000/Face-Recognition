@@ -10,8 +10,13 @@ def load_and_encode_image(image_path):
 
 def verify_user(encoding, registered_users):
     
+    tolerance = 0.4
     for user_id, registered_encoding in registered_users.items():
-        match = face_recognition.compare_faces([registered_encoding], encoding)
+        match = face_recognition.compare_faces(
+            [registered_encoding],
+            encoding,
+            tolerance=tolerance
+        )
         if match[0]:
             return user_id
     return None
