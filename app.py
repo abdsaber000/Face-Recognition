@@ -42,6 +42,16 @@ def register():
     if encoding is None:
         return jsonify({'message': 'No face detected in the image'}), 400
 
+    registered_users = {user.user_id: json.loads(user.encoding) for user in User.query.all()}
+
+    current_id = verify_user(encoding, registered_users)
+
+    if current_id:
+        if current_id != user_id:
+            return jsonify({'message': 'Face already registered with a different user ID.'}), 400
+        else:
+            return jsonify({'message': 'User is already registered.'}), 200
+
     new_user = User(user_id=user_id, encoding=json.dumps(encoding.tolist()))
     db.session.add(new_user)
     db.session.commit()
@@ -77,6 +87,16 @@ def verfiy():
         }), 200
     else:
         return jsonify({'message': 'User not found'}), 404
+    
+@app.route('/delete-user/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        return jsonify({'message': 'User not found.'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User has been deleted successfully.'}), 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",debug=True)
